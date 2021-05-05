@@ -1,4 +1,4 @@
-
+const heroForm = document.getElementById('heroForm')
 
 function fetchHeros(){
     fetch("http://localhost:3000/heros")
@@ -6,11 +6,36 @@ function fetchHeros(){
     .then(appendHeros)
 }
 function appendHeros(heros){
-    const herosDiv = document.getElementById('heros')
     for (let hero of heros){
-        const li = document.createElement("li")
+        appendHero(hero) 
+    }
+}
+
+function appendHero(hero){
+    const herosDiv = document.getElementById('heros')
+    const li = document.createElement("li")
         li.innerText = hero.name 
         herosDiv.append(li)
         appendPowers(hero.powers, li)
+}
+
+function postHero(e) {
+    e.preventDefault()
+    const userInput = e.target.children[2].value
+    const body = {
+        hero: {
+            name: userInput
+        }
     }
+    e.target.reset()
+    
+    fetch("http://localhost:3000/heros",{
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+    })
+    .then(r => r.json())
+    .then(appendHero)
 }
