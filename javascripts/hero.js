@@ -15,13 +15,22 @@ function appendHero(hero){
     const herosDiv = document.getElementById('heros')
     const li = document.createElement("li")
         li.innerText = hero.name 
+        li.addEventListener('click', (e) => renderHeroShowPage(hero))
         herosDiv.append(li)
         appendPowers(hero.powers, li)
 }
 
+function renderHeroShowPage(hero){
+    const heroContainer = document.getElementById('heroContainer')
+    heroContainer.children[1].innerHTML = ""
+    heroContainer.children[0].remove()
+    appendHero(hero)
+    appendPowerForm()
+}
+
 function postHero(e) {
     e.preventDefault()
-    const userInput = e.target.children[2].value
+    const userInput = e.target.children[1].value
     const body = {
         hero: {
             name: userInput
