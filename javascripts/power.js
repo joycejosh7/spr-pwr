@@ -5,7 +5,7 @@ function appendPowers(powers, element){
     for(let power of powers){
         const powerLi = document.createElement("li")
         const powerDelete = document.createElement("button")
-        powerDelete.innerText = "Power Lost"
+        powerDelete.innerText = "Lose Power"
         powerLi.innerText = power.ability 
         powerDelete.addEventListener('click', (e) => deletePower(power.id, powerLi))
         powerLi.append(powerDelete)
@@ -20,4 +20,15 @@ function deletePower(powerId, powerLi){
     .then(m => {
         powerLi.remove()
     })
+}
+
+function appendPowerForm(){
+    const heros = document.getElementById('heros')
+    const powerForm = `
+    <form id="powerForm">
+        <label>New Ability:</label>
+        <input id="powerAbility"/>
+        <input type="submit" value="Gain New Ability"/>
+    </form>
+    `
 }
