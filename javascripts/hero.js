@@ -11,5 +11,6 @@ function appendHeros(heros){
         const li = document.createElement("li")
         li.innerText = hero.name 
         herosDiv.append(li)
+        appendPowers(hero.powers, li)
     }
 }
