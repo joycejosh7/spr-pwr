@@ -1,41 +1,65 @@
-function appendPowers(powers, element){
-    const ul = document.createElement('ul')
-    element.append(ul)
 
-    for(let power of powers){
+class Power {
+
+    constructor({id, ability, heroId}){
+        this.id = id
+        this.ability = ability
+        this.heroId = heroId
+    }
+
+    appendPower(ul){
         const powerLi = document.createElement("li")
         const powerDelete = document.createElement("button")
         powerDelete.innerText = "Lose Power"
-        powerLi.innerText = power.ability 
-        powerDelete.addEventListener('click', (e) => deletePower(power.id, powerLi))
+        powerDelete.id = this.id
+        powerLi.innerText = this.ability 
+        powerDelete.addEventListener('click', e => {
+            this.deletePower(powerLi)
+        })
         powerLi.append(powerDelete)
         ul.append(powerLi)
     }
+
+    deletePower(powerLi){
+        fetch(`http://localhost:3000/powers/${this.id}`,{
+            method: "DELETE"
+        }).then(r => r.json)
+        .then(m => {
+            powerLi.remove()
+        })
+    }
+
+    static addPower(e){
+        e.preventDefault()
+        const userInput = e.target.children[1].value
+        const heroId = ""
+        const body = {
+            power: {
+                name: userInput,
+                heroId: heroId
+            }
+        }
+        // e.target.reset()
+        
+        // fetch("http://localhost:3000/heros",{
+        //     method: "POST",
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(body)
+        // })
+        // .then(r => r.json())
+        // .then(hero => {
+        //     let newHero = new Hero(hero)
+        //     newHero.appendHero()
+        // })
+    }
+
 }
 
-function deletePower(powerId, powerLi){
-    fetch(`http://localhost:3000/powers/${powerId}`,{
-        method: "DELETE"
-    }).then(r => r.json)
-    .then(m => {
-        powerLi.remove()
-    })
-}
 
-function appendPowerForm(){
-    const heros = document.getElementById('heros')
-    const powerForm = `
-    <form id="powerForm">
-        <label>New Ability:</label>
-        <input id="powerAbility"/>
-        <input type="submit" value="Gain New Ability"/>
-    </form>
-    `
-    heros.innerHTML += powerForm
-    document.getElementById('powerForm').addEventListener('submit', addPower)
-}
 
-function addPower(e){
-    e.preventDefault()
-    debugger
-}
+
+
+
+

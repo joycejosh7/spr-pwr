@@ -3,19 +3,29 @@ const heroForm = document.getElementById('heroForm')
 
 class Hero {
 
-    constructor(hero){
-        this.name = hero.name 
-        this.id = hero.id
-        this.powers = hero.powers
+    constructor({name, id, powers}){
+        this.name = name 
+        this.id = id
+        this.powers = powers.map(power => new Power(power))
+    }
+
+    appendPowers(element){
+        const ul = document.createElement('ul')
+        element.append(ul)
+        for(let power of this.powers){
+            power.appendPower(ul)
+        }
     }
     
     appendHero(){
         const herosDiv = document.getElementById('heros')
         const li = document.createElement("li")
-        li.innerText = this.name 
-        li.addEventListener('click', () => this.renderHeroShowPage())
-        herosDiv.append(li)
-        appendPowers(this.powers, li)
+        const div = document.createElement("div")
+        li.innerText = this.name
+        li.addEventListener('click', this.renderHeroShowPage.bind(this))
+        herosDiv.append(div)
+        div.append(li)
+        this.appendPowers(div)
     }
 
     renderHeroShowPage(){
@@ -23,7 +33,21 @@ class Hero {
         heroContainer.children[1].innerHTML = ""
         heroContainer.children[0].remove()
         this.appendHero()
-        // appendPowerForm()
+        Power.appendPowerForm()
+    }
+
+    appendPowerForm(){
+        const heros = document.getElementById('heros')
+        const powerForm = `
+        <form id="powerForm">
+            <label>New Ability:</label>
+            <input id="powerAbility"/>
+            <input type="hidden" id="${this.id}" />
+            <input type="submit" value="Gain New Ability"/>
+        </form>
+        `
+        heros.innerHTML += powerForm
+        document.getElementById('powerForm').addEventListener('submit', Power.addPower.bind(this))
     }
 
     static fetchHeros(){
@@ -43,7 +67,7 @@ class Hero {
         e.preventDefault()
         const userInput = e.target.children[1].value
         const body = {
-            hero: {
+            power: {
                 name: userInput
             }
         }
