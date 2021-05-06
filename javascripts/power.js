@@ -31,4 +31,11 @@ function appendPowerForm(){
         <input type="submit" value="Gain New Ability"/>
     </form>
     `
+    heros.innerHTML += powerForm
+    document.getElementById('powerForm').addEventListener('submit', addPower)
+}
+
+function addPower(e){
+    e.preventDefault()
+    debugger
 }
