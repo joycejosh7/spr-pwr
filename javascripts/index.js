@@ -1,3 +1,3 @@
-heroForm.addEventListener('submit', postHero)
+heroForm.addEventListener('submit', Hero.postHero)
 
-fetchHeros()
+Hero.fetchHeros()

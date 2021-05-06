@@ -1,50 +1,72 @@
 const heroForm = document.getElementById('heroForm')
 
-function fetchHeros(){
-    fetch("http://localhost:3000/heros")
-    .then(r => r.json())
-    .then(appendHeros)
-}
-function appendHeros(heros){
-    for (let hero of heros){
-        appendHero(hero) 
+
+class Hero {
+
+    constructor(hero){
+        this.name = hero.name 
+        this.id = hero.id
+        this.powers = hero.powers
     }
-}
-
-function appendHero(hero){
-    const herosDiv = document.getElementById('heros')
-    const li = document.createElement("li")
-        li.innerText = hero.name 
-        li.addEventListener('click', (e) => renderHeroShowPage(hero))
+    
+    appendHero(){
+        const herosDiv = document.getElementById('heros')
+        const li = document.createElement("li")
+        li.innerText = this.name 
+        li.addEventListener('click', () => this.renderHeroShowPage())
         herosDiv.append(li)
-        appendPowers(hero.powers, li)
-}
+        appendPowers(this.powers, li)
+    }
 
-function renderHeroShowPage(hero){
-    const heroContainer = document.getElementById('heroContainer')
-    heroContainer.children[1].innerHTML = ""
-    heroContainer.children[0].remove()
-    appendHero(hero)
-    appendPowerForm()
-}
+    renderHeroShowPage(){
+        const heroContainer = document.getElementById('heroContainer')
+        heroContainer.children[1].innerHTML = ""
+        heroContainer.children[0].remove()
+        this.appendHero()
+        // appendPowerForm()
+    }
 
-function postHero(e) {
-    e.preventDefault()
-    const userInput = e.target.children[1].value
-    const body = {
-        hero: {
-            name: userInput
+    static fetchHeros(){
+        fetch("http://localhost:3000/heros")
+        .then(r => r.json())
+        .then(this.appendHeros)
+    }
+
+    static appendHeros(heros){
+        for (let hero of heros){
+            let newHero = new Hero(hero)
+            newHero.appendHero()
         }
     }
-    e.target.reset()
+
+    static postHero(e) {
+        e.preventDefault()
+        const userInput = e.target.children[1].value
+        const body = {
+            hero: {
+                name: userInput
+            }
+        }
+        e.target.reset()
+        
+        fetch("http://localhost:3000/heros",{
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body)
+        })
+        .then(r => r.json())
+        .then(hero => {
+            let newHero = new Hero(hero)
+            newHero.appendHero()
+        })
+    }
     
-    fetch("http://localhost:3000/heros",{
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body)
-    })
-    .then(r => r.json())
-    .then(appendHero)
+    
+
 }
+
+
+
+
